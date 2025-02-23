@@ -31,6 +31,23 @@ func assertCount(t *testing.T, idx int, tkn token.Token, exp *Counter, act Count
 	}
 }
 
+func TestSimple(t *testing.T) {
+	input := `1234`
+	lxr := New(input)
+	counter := new(Counter)
+
+	tests := []token.Token{
+		{Token: token.INT, Literal: "1234"},
+}
+
+	for idx, tt := range tests {
+		tkn := lxr.NextToken()
+		assertToken(t, idx, tt, tkn)
+		assertCount(t, idx, tt, counter, lxr.counter)
+	}
+}
+
+
 func TestBaseExpressions(t *testing.T) {
 	input := `five = 5
 ten = 10
