@@ -169,3 +169,119 @@ z = ten / five
 	}
 }
 
+
+func TestCondintions(t *testing.T) {
+	input := `x = 5
+y = 10
+z = 20
+
+
+if x <= y >= z:
+    x = x * 2
+elif x < y > z:
+    y = y / 2
+else:
+    z = 0
+`
+
+	tests := []token.Token{
+		{Token: token.IDENT, Literal: "x"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.ASSIGN, Literal: "="},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.INT, Literal: "5"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.IDENT, Literal: "y"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.ASSIGN, Literal: "="},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.INT, Literal: "10"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.IDENT, Literal: "z"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.ASSIGN, Literal: "="},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.INT, Literal: "20"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.IF, Literal: "if"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.IDENT, Literal: "x"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.LE, Literal: "<="},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.IDENT, Literal: "y"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.GE, Literal: ">="},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.IDENT, Literal: "z"},
+		{Token: token.COLON, Literal: ":"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.IDENT, Literal: "x"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.ASSIGN, Literal: "="},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.IDENT, Literal: "x"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.MUL, Literal: "*"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.INT, Literal: "2"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.ELIF, Literal: "elif"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.IDENT, Literal: "x"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.LT, Literal: "<"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.IDENT, Literal: "y"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.GT, Literal: ">"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.IDENT, Literal: "z"},
+		{Token: token.COLON, Literal: ":"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.IDENT, Literal: "y"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.ASSIGN, Literal: "="},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.IDENT, Literal: "y"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.DIV, Literal: "/"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.INT, Literal: "2"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.ELSE, Literal: "else"},
+		{Token: token.COLON, Literal: ":"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.IDENT, Literal: "z"},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.ASSIGN, Literal: "="},
+		{Token: token.SPC, Literal: " "},
+		{Token: token.INT, Literal: "0"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.EOF, Literal: ""},
+	}
+
+	lxr := New(input)
+	counter := new(Counter)
+
+
+	for idx, tt := range tests {
+		tkn := lxr.NextToken()
+		assertToken(t, idx, tt, tkn)
+		assertCount(t, idx, tt, counter, lxr.counter)
+	}
+}
