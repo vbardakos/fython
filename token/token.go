@@ -51,6 +51,8 @@ const (
 	IF       = "IF"
 	ELIF     = "ELIF"
 	ELSE     = "ELSE"
+	TRUE     = "TRUE"
+	FALSE    = "FALSE"
 )
 
 var keywords = map[string]TokenType{
@@ -62,9 +64,11 @@ var keywords = map[string]TokenType{
 	"if":     IF,
 	"elif":   ELIF,
 	"else":   ELSE,
+	"True":   TRUE,
+	"False":  FALSE,
 }
 
-func LookupKeywords(ident string) TokenType {
+func LookupKeyword(ident string) TokenType {
 	if tkn, ok := keywords[ident]; ok {
 		return tkn
 	}
