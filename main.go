@@ -2,10 +2,20 @@ package main
 
 import (
 	"fmt"
-	"github.com/vbardakos/fython/lexer"
+	"os"
+	"os/user"
+
+	"github.com/vbardakos/fython/repl"
 )
 
 func main() {
-	fmt.Println("Hello from fython")
-	lexer.Print()
+	user, err := user.Current()
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Welcome to Fython REPL, %s!\n", user.Username)
+
+	repl.Start(os.Stdin, os.Stdout)
 }

@@ -35,6 +35,7 @@ func New(input string) *Lexer {
 
 func (lxr *Lexer) readChar() {
 	lxr.counter.addColumn()
+	lxr.position = lxr.readPosition
 
 	if lxr.readPosition >= len(lxr.input) {
 		lxr.char = 0
@@ -42,7 +43,6 @@ func (lxr *Lexer) readChar() {
 	}
 
 	lxr.char = lxr.input[lxr.readPosition]
-	lxr.position = lxr.readPosition
 	lxr.readPosition += 1
 }
 
@@ -121,6 +121,10 @@ func (lxr *Lexer) NextToken() token.Token {
 	case '\n':
 		lxr.counter.addLine()
 		tkn = newToken(token.EOL, lxr.char)
+	case 0:
+		tkn.Literal = ""
+		tkn.Token = token.EOF
+		return tkn
 	default:
 		if isLetter(lxr.char) {
 			tkn.Literal = lxr.readIdentifier()
@@ -133,10 +137,6 @@ func (lxr *Lexer) NextToken() token.Token {
 			return tkn
 		}
 		tkn = newToken(token.ILLEGAL, lxr.char)
-	case 0:
-		tkn.Literal = ""
-		tkn.Token = token.EOF
-		return tkn
 	}
 
 	lxr.readChar()
