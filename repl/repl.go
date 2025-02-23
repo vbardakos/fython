@@ -9,7 +9,7 @@ import (
 	"github.com/vbardakos/fython/token"
 )
 
-const PROMPT = ">>"
+const PROMPT = ">> "
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
@@ -26,7 +26,7 @@ func Start(in io.Reader, out io.Writer) {
 		lxr := lexer.New(line)
 
 		for tkn := lxr.NextToken(); tkn.Token != token.EOF; tkn = lxr.NextToken() {
-			fmt.Fprintf(out, "%v\n", tkn)
+			fmt.Fprintf(out, "%+v\n", tkn)
 		}
 	}
 }
