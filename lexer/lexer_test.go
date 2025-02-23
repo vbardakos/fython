@@ -161,14 +161,12 @@ z = ten / five
 	lxr := New(input)
 	counter := new(Counter)
 
-
 	for idx, tt := range tests {
 		tkn := lxr.NextToken()
 		assertToken(t, idx, tt, tkn)
 		assertCount(t, idx, tt, counter, lxr.counter)
 	}
 }
-
 
 func TestCondintions(t *testing.T) {
 	input := `x = 5
@@ -277,7 +275,6 @@ else:
 
 	lxr := New(input)
 	counter := new(Counter)
-
 
 	for idx, tt := range tests {
 		tkn := lxr.NextToken()
