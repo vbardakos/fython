@@ -51,5 +51,22 @@ func (p *Parser) parseStatement() ast.Stmt {
 }
 
 func (p *Parser) parseAssignStmt() ast.Stmt {
-	return nil
+	if !p.expectPeek(token.ASSIGN) {
+		return nil
+	}
+
+	stmt := &ast.AssignStmt{Token: p.peek}
+
+	stmt.Name = &ast.Identifier{Token: p.curr, Value: p.curr.Literal}
+
+	p.nextToken()
+	return stmt
+}
+
+func (p *Parser) expectPeek(tkn token.TokenType) bool {
+	return p.peek.Token == tkn
+}
+
+func (p *Parser) expectCurr(tkn token.TokenType) bool {
+	return p.curr.Token == tkn
 }
