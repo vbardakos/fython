@@ -32,7 +32,7 @@ type Identifier struct {
 	Value string
 }
 
-func (i *Identifier) exprNode()
+func (i *Identifier) exprNode()            {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
 
 type AssignStmt struct {
