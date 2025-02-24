@@ -11,6 +11,7 @@ const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 	EOL     = "EOL"
+	INDENT  = "INDENT"
 
 	// Identifiers + literals
 	IDENT = "IDENT" // add, foobar, x, y, ...
@@ -32,7 +33,6 @@ const (
 	LE = ">="
 
 	// Delimiters
-	SPC       = " "
 	COMMA     = ","
 	SEMICOLON = ";"
 	COLON     = ":"
