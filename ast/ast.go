@@ -27,6 +27,14 @@ func (p *Program) TokenLiteral() string {
 	return ""
 }
 
+type Identifier struct {
+	Token token.Token
+	Value string
+}
+
+func (i *Identifier) exprNode()
+func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
+
 type AssignStmt struct {
 	Token token.Token
 	Name  *Identifier
@@ -34,9 +42,4 @@ type AssignStmt struct {
 }
 
 func (s *AssignStmt) stmtNode()            {}
-func (s *AssignStmt) TokenLiteral() string { return s.Token.Literal }
-
-type Identifier struct {
-	Token token.Token
-	Value string
-}
+func (s *AssignStmt) TokenLiteral() string { return "ASSIGN" }
