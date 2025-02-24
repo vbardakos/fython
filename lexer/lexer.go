@@ -1,8 +1,6 @@
 package lexer
 
-import (
-	"github.com/vbardakos/fython/token"
-)
+import "github.com/vbardakos/fython/token"
 
 type Lexer struct {
 	input        string
@@ -47,7 +45,7 @@ func (lxr *Lexer) readChar() {
 }
 
 func (lxr *Lexer) peekChar(idx int) byte {
-	peek := lxr.readPosition + idx
+	peek := lxr.position + idx
 	if peek >= len(lxr.input) {
 		return 0
 	}
@@ -59,9 +57,19 @@ func (lxr *Lexer) NextToken() token.Token {
 
 	switch lxr.char {
 	case ' ':
-		tkn = newToken(token.SPC, lxr.char)
+		if isIndent(lxr) {
+			lit := string(lxr.char)
+			for range 3 {
+				lxr.readChar()
+				lit += string(lxr.char)
+			}
+			tkn = token.Token{Token: token.INDENT, Literal: lit}
+		} else {
+			lxr.readChar()
+			return lxr.NextToken()
+		}
 	case '=':
-		if lxr.peekChar(0) == '=' {
+		if lxr.peekChar(1) == '=' {
 			curr := lxr.char
 			lxr.readChar()
 			literal := string(curr) + string(lxr.char)
@@ -78,7 +86,7 @@ func (lxr *Lexer) NextToken() token.Token {
 	case '/':
 		tkn = newToken(token.DIV, lxr.char)
 	case '!':
-		if lxr.peekChar(0) == '=' {
+		if lxr.peekChar(1) == '=' {
 			curr := lxr.char
 			lxr.readChar()
 			literal := string(curr) + string(lxr.char)
@@ -91,7 +99,7 @@ func (lxr *Lexer) NextToken() token.Token {
 	case ')':
 		tkn = newToken(token.RPAREN, lxr.char)
 	case '>':
-		if lxr.peekChar(0) == '=' {
+		if lxr.peekChar(1) == '=' {
 			curr := lxr.char
 			lxr.readChar()
 			literal := string(curr) + string(lxr.char)
@@ -100,7 +108,7 @@ func (lxr *Lexer) NextToken() token.Token {
 			tkn = newToken(token.GT, lxr.char)
 		}
 	case '<':
-		if lxr.peekChar(0) == '=' {
+		if lxr.peekChar(1) == '=' {
 			curr := lxr.char
 			lxr.readChar()
 			literal := string(curr) + string(lxr.char)
@@ -169,4 +177,20 @@ func isLetter(char byte) bool {
 
 func isDigit(char byte) bool {
 	return '0' <= char && char <= '9'
+}
+
+func isIndent(lxr *Lexer) bool {
+	col := lxr.counter.column
+
+	if col%4 != 0 {
+		return false
+	}
+
+	// peek line start until 3 infront
+	for i := -col; i < 3; i++ {
+		if lxr.peekChar(i) != ' ' {
+			return false
+		}
+	}
+	return true
 }
