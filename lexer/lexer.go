@@ -15,12 +15,12 @@ type Counter struct {
 	column int
 }
 
-func (c *Counter) addLine() {
+func (c *Counter) moveLine() {
 	c.line += 1
 	c.column = -1
 }
 
-func (c *Counter) addColumn() {
+func (c *Counter) moveCol() {
 	c.column += 1
 }
 
@@ -32,7 +32,7 @@ func New(input string) *Lexer {
 }
 
 func (lxr *Lexer) readChar() {
-	lxr.counter.addColumn()
+	lxr.counter.moveCol()
 	lxr.position = lxr.readPosition
 
 	if lxr.readPosition >= len(lxr.input) {
@@ -127,7 +127,7 @@ func (lxr *Lexer) NextToken() token.Token {
 	case ':':
 		tkn = newToken(token.COLON, lxr.char)
 	case '\n':
-		lxr.counter.addLine()
+		lxr.counter.moveLine()
 		tkn = newToken(token.EOL, lxr.char)
 	case 0:
 		tkn.Literal = ""
@@ -193,4 +193,8 @@ func isIndent(lxr *Lexer) bool {
 		}
 	}
 	return true
+}
+
+func (lxr *Lexer) GetPosition() (int, int) {
+	return lxr.counter.line, lxr.counter.column
 }
