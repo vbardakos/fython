@@ -1,11 +1,9 @@
 package parser
 
 import (
-	// "github.com/vbardakos/fython/ast"
-	"testing"
-
 	"github.com/vbardakos/fython/ast"
 	"github.com/vbardakos/fython/lexer"
+	"testing"
 )
 
 func TestStatements(t *testing.T) {
@@ -22,9 +20,10 @@ seven = 7
 		t.Fatalf("ParseProgram returns nil")
 	}
 
-	if len(program.Statements) != 3 {
-		t.Fatalf("ParseProgram did not get 2 statements. got=%d",
-			len(program.Statements))
+	lines := 3
+	if len(program.Statements) != lines {
+		t.Fatalf("ParseProgram.Stmt Len Error. exp=%d, got=%d",
+			lines, len(program.Statements))
 	}
 
 	tests := []struct {
