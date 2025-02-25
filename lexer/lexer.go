@@ -1,6 +1,8 @@
 package lexer
 
-import "github.com/vbardakos/fython/token"
+import (
+	"github.com/vbardakos/fython/token"
+)
 
 type Lexer struct {
 	input        string
@@ -135,7 +137,7 @@ func (lxr *Lexer) NextToken() token.Token {
 		return tkn
 	default:
 		if lxr.isBytes() {
-			tkn.Literal = lxr.readString()
+			tkn.Literal = lxr.readBytes()
 			tkn.Token = token.BYTES
 			return tkn
 		}
@@ -179,11 +181,22 @@ func (lxr *Lexer) readNumber() string {
 
 func (lxr *Lexer) readString() string {
 	quote := lxr.char
-	position := lxr.readPosition // esc marked quote
-	for lxr.char != quote && lxr.peekChar(-1) != '\\' {
+	if quote == lxr.peekChar(1) {
+		return ""
+	}
+	lxr.readChar()       // read through quote
+	defer lxr.readChar() // read closing quote
+
+	position := lxr.position
+	for lxr.char != quote || lxr.peekChar(-1) == '\\' {
 		lxr.readChar()
 	}
-	return lxr.input[position : lxr.position-1]
+	return lxr.input[position:lxr.position]
+}
+
+func (lxr *Lexer) readBytes() string {
+	lxr.readChar() // move to quote
+	return lxr.readString()
 }
 
 func newToken(tokenType token.TokenType, char byte) token.Token {
