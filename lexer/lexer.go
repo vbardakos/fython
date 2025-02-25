@@ -1,6 +1,8 @@
 package lexer
 
 import (
+	"strings"
+
 	"github.com/vbardakos/fython/token"
 )
 
@@ -172,8 +174,10 @@ func (lxr *Lexer) readIdentifier() string {
 }
 
 func (lxr *Lexer) readNumber() string {
+	// todo: add exponents, octals, bins
+	// fixme: fix illegal cases
 	position := lxr.position
-	for isDigit(lxr.char) {
+	for isDigit(lxr.char) || lxr.char == '.' {
 		lxr.readChar()
 	}
 	return lxr.input[position:lxr.position]

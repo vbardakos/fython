@@ -18,7 +18,7 @@ const (
 	BOOL  = "BOOL"  // True/False
 	INT   = "INT"   // 1343456
 	BYTES = "BYTES" // b'\x00'
-	FLOAT = "FLOAT" // 1.21345  -- note: not impl
+	FLOAT = "FLOAT" // 1.21345
 	STR   = "STR"   // "abcde"
 
 	// Operators
