@@ -9,11 +9,11 @@ import (
 )
 
 type Parser struct {
-	lxr  *lexer.Lexer
-	errs []Error
+	lxr *lexer.Lexer
 
 	curr token.Token
 	peek token.Token
+	errs []Error
 }
 
 type Error struct {
@@ -23,8 +23,8 @@ type Error struct {
 	column int
 }
 
-func (e *Error) Print() string {
-	msg := fmt.Sprintf("[%d:%d] exp=%q, got=%q",
+func (e *Error) Show() string {
+	msg := fmt.Sprintf("[%d:%d] TokenType Error. exp=%q, got=%q",
 		e.line, e.column, e.expect, e.actual)
 	return msg
 }
@@ -64,6 +64,8 @@ func (p *Parser) parseStatement() ast.Stmt {
 	switch p.curr.Token {
 	case token.IDENT:
 		return p.parseAssignStmt()
+	case token.RETURN:
+		return p.parseReturnStmt()
 	default:
 		return nil
 	}
@@ -76,7 +78,12 @@ func (p *Parser) parseAssignStmt() ast.Stmt {
 	}
 
 	stmt := &ast.AssignStmt{Token: p.curr, Name: ident}
+	p.nextToken()
+	return stmt
+}
 
+func (p *Parser) parseReturnStmt() ast.Stmt {
+	stmt := &ast.ReturnStmt{Token: p.curr}
 	p.nextToken()
 	return stmt
 }

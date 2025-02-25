@@ -43,3 +43,11 @@ type AssignStmt struct {
 
 func (s *AssignStmt) stmtNode()            {}
 func (s *AssignStmt) TokenLiteral() string { return "ASSIGN" }
+
+type ReturnStmt struct {
+	Token token.Token
+	Value Expr
+}
+
+func (s *ReturnStmt) stmtNode()            {}
+func (s *ReturnStmt) TokenLiteral() string { return s.Token.Literal }
