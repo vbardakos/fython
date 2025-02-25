@@ -12,7 +12,7 @@ func assertToken(t *testing.T, idx int, exp token.Token, act token.Token) {
 	}
 
 	if exp.Literal != act.Literal {
-		t.Fatalf("tests[%d] - Literal Error. expected=%q, got=%q",
+		t.Fatalf("tests[%d] - Literal Error. expected=%s, got=%s",
 			idx, exp.Literal, act.Literal)
 	}
 }
@@ -108,6 +108,45 @@ z = ten / five
 		{Token: token.DIV, Literal: "/"},
 		{Token: token.IDENT, Literal: "five"},
 		{Token: token.EOL, Literal: "\n"},
+	}
+
+	lxr := New(input)
+	for idx, tt := range tests {
+		tkn := lxr.NextToken()
+		assertToken(t, idx, tt, tkn)
+	}
+}
+
+func TestStringsAndBytes(t *testing.T) {
+	input := `
+"'hello world'"
+'"hello world"'
+"hello \"world\""
+'hello \'world\''
+b"'hello world'"
+b'"hello world"'
+b"hello \"world\""
+b'hello \'world\''
+`
+	// eol := token.Token{Token: token.EOL, Literal: "\n"}
+
+	tests := []token.Token{
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.STR, Literal: "'hello world'"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.STR, Literal: `"hello world"`},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.STR, Literal: `hello \"world\"`},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.STR, Literal: `hello \'world\'`},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.BYTES, Literal: "'hello world'"},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.BYTES, Literal: `"hello world"`},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.BYTES, Literal: `hello \"world\"`},
+		{Token: token.EOL, Literal: "\n"},
+		{Token: token.BYTES, Literal: `hello \'world\'`},
 	}
 
 	lxr := New(input)
