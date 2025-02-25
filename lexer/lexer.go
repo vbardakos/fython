@@ -1,6 +1,8 @@
 package lexer
 
-import "github.com/vbardakos/fython/token"
+import (
+	"github.com/vbardakos/fython/token"
+)
 
 type Lexer struct {
 	input        string
@@ -134,6 +136,11 @@ func (lxr *Lexer) NextToken() token.Token {
 		tkn.Token = token.EOF
 		return tkn
 	default:
+		if lxr.isBytes() {
+			tkn.Literal = lxr.readBytes()
+			tkn.Token = token.BYTES
+			return tkn
+		}
 		if isLetter(lxr.char) {
 			tkn.Literal = lxr.readIdentifier()
 			tkn.Token = token.LookupKeyword(tkn.Literal)
@@ -142,6 +149,11 @@ func (lxr *Lexer) NextToken() token.Token {
 		if isDigit(lxr.char) {
 			tkn.Literal = lxr.readNumber()
 			tkn.Token = token.INT
+			return tkn
+		}
+		if isQuote(lxr.char) {
+			tkn.Literal = lxr.readString()
+			tkn.Token = token.STR
 			return tkn
 		}
 		tkn = newToken(token.ILLEGAL, lxr.char)
@@ -160,11 +172,33 @@ func (lxr *Lexer) readIdentifier() string {
 }
 
 func (lxr *Lexer) readNumber() string {
+	// todo: add exponents, octals, bins
+	// fixme: fix illegal cases
 	position := lxr.position
-	for isDigit(lxr.char) {
+	for isDigit(lxr.char) || lxr.char == '.' {
 		lxr.readChar()
 	}
 	return lxr.input[position:lxr.position]
+}
+
+func (lxr *Lexer) readString() string {
+	quote := lxr.char
+	if quote == lxr.peekChar(1) {
+		return ""
+	}
+	lxr.readChar()       // read through quote
+	defer lxr.readChar() // read closing quote
+
+	position := lxr.position
+	for lxr.char != quote || lxr.peekChar(-1) == '\\' {
+		lxr.readChar()
+	}
+	return lxr.input[position:lxr.position]
+}
+
+func (lxr *Lexer) readBytes() string {
+	lxr.readChar() // move to quote
+	return lxr.readString()
 }
 
 func newToken(tokenType token.TokenType, char byte) token.Token {
@@ -177,6 +211,14 @@ func isLetter(char byte) bool {
 
 func isDigit(char byte) bool {
 	return '0' <= char && char <= '9'
+}
+
+func isQuote(char byte) bool {
+	return char == '\'' || char == '"'
+}
+
+func (lxr *Lexer) isBytes() bool {
+	return lxr.char == 'b' && isQuote(lxr.peekChar(1))
 }
 
 func isIndent(lxr *Lexer) bool {
