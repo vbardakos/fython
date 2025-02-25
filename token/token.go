@@ -15,7 +15,11 @@ const (
 
 	// Identifiers + literals
 	IDENT = "IDENT" // add, foobar, x, y, ...
+	BOOL  = "BOOL"  // True/False
 	INT   = "INT"   // 1343456
+	BYTES = "BYTES" // b'\x00'
+	FLOAT = "FLOAT" // 1.21345  -- note: not impl
+	STR   = "STR"   // "abcde"
 
 	// Operators
 	ASSIGN = "="
@@ -36,6 +40,8 @@ const (
 	COMMA     = ","
 	SEMICOLON = ";"
 	COLON     = ":"
+	SQUOTE    = "'"
+	DQUOTE    = "\""
 
 	LPAREN = "("
 	RPAREN = ")"
@@ -51,8 +57,6 @@ const (
 	IF       = "IF"
 	ELIF     = "ELIF"
 	ELSE     = "ELSE"
-	TRUE     = "TRUE"
-	FALSE    = "FALSE"
 )
 
 var keywords = map[string]TokenType{
@@ -64,8 +68,8 @@ var keywords = map[string]TokenType{
 	"if":     IF,
 	"elif":   ELIF,
 	"else":   ELSE,
-	"True":   TRUE,
-	"False":  FALSE,
+	"True":   BOOL,
+	"False":  BOOL,
 }
 
 func LookupKeyword(ident string) TokenType {
